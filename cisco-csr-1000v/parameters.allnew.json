@@ -1,0 +1,77 @@
+{
+    "location": {
+        "value": "southeastasia"
+    },
+    "virtualNetworkName": {
+        "value": "reshmi800vnet"
+    },
+    "virtualNetworkExistingRGName": {
+        "value": ""
+    },
+    "virtualNetworkAddressPrefix": {
+        "value": "10.80.0.0/16"
+    },
+    "Subnet1Prefix": {
+        "value": "10.80.1.0/24"
+    },
+    "Subnet1Name": {
+        "value": "sn1"
+    },
+    "Subnet2Prefix": {
+        "value": "10.80.2.0/24"
+    },
+    "Subnet2Name": {
+        "value": "sn2"
+    },
+    "adminUsername": {
+        "value": "cloudguy"
+    },
+    "adminPassword": {
+        "value": "abc_123!"
+    },
+    "sshPublicKey": {
+        "value": ""
+    },
+    "authenticationType": {
+        "value": "password"
+    },
+    "vmName": {
+        "value": "myvm"
+    },
+    "newStorageAccountName": {
+        "value": "ciscocsrstorage800"
+    },
+    "storageAccountType": {
+        "value": "Standard_LRS"
+    },
+    "storageAccountNewOrExisting": {
+        "value": "new"
+    },
+    "storageAccountExistingRG": {
+        "value": ""
+    },
+    "publicIPAddressName": {
+        "value": "reshmi800ip"
+    },
+    "publicIPDnsName": {
+        "value": "reshmi800dns"
+    },
+    "publicIPNewOrExisting": {
+        "value": "new"
+    },
+    "publicIPExistingRGName": {
+        "value": ""
+    },
+    "vnetNewOrExisting" : {
+        "value" : "new"
+    },
+    "baseUrl": {
+        "value": "https://raw.githubusercontent.com/reyandap/armtemplates/master/cisco-csr-1000v"
+    },
+    "subnet1startaddress" : {
+        "value" : "10.80.2.4"
+    },
+    "vmSize" : {
+        "value" : "Standard_D2"
+    }
+}
