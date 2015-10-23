@@ -4,82 +4,91 @@
     "parameters": {
         "location": {
             "type": "string",
+            "defaultValue":"North Central US",
             "metadata": {
                 "description": "Deployment location"
             }
         },
         "virtualNetworkName": {
             "type": "string",
-            "defaultValue": "CSR_Network",
+            "defaultValue": "CSR_Network2",
             "metadata": {
                 "description": "VNet name"
             }
         },
         "virtualNetworkExistingRGName": {
             "type": "string",
-            "defaultValue": "",
+            "defaultValue": "CSRStorage2",
             "metadata": {
                 "description": "Identifies whether to use new or existing Storage Account"
             }
         },
         "virtualNetworkAddressPrefix": {
             "type": "string",
-            "defaultValue": "",
+            "defaultValue": "10.0.0.0/16",
             "metadata": {
                 "description": "Virtual Network Address prefix"
             }
         },
         "vnetNewOrExisting" : {
             "type" : "string",
-            "defaultValue" : "",
+            "defaultValue" : "new",
             "metadata": {
                 "description": "Identifies whether to use new or existing Virtual Network"
             }
         },
         "Subnet1Prefix": {
             "type": "string",
-            "defaultValue": "",
+            "defaultValue": "10.0.0.0/24",
             "metadata": {
                 "description": "Subnet 1 Prefix"
             }
         },
         "Subnet1Name": {
             "type": "string",
-            "defaultValue": "",
+            "defaultValue": "Front",
             "metadata": {
                 "description": "Subnet 1 Name"
             }
         },
+        "subnet1StartAddress" : {
+            "type" : "string",
+            "defaultValue": "10.0.0.10",
+            "metadata" : {
+                "description" : "IP Address for CSR interface in subnet1"
+            }
+        },
         "Subnet2Prefix": {
             "type": "string",
-            "defaultValue": "",
+            "defaultValue": "10.0.1.0/24",
             "metadata": {
                 "description": "Subnet 2 Prefix"
             }
         },
         "Subnet2Name": {
             "type": "string",
-            "defaultValue": "",
+            "defaultValue": "Back",
             "metadata": {
                 "description": "Subnet 2 Name"
             }
         },
-        "subnet1StartAddress" : {
+        "subnet2StartAddress" : {
             "type" : "string",
+            "defaultValue": "10.0.1.10",
             "metadata" : {
-                "description" : "Subnet 1 Starting IP Address"
+                "description" : "CSR IP Address in backend subnet"
             }
         },
         "adminUsername": {
             "type": "string",
-            "defaultValue": "",
+            "defaultValue": "azureuser",
             "metadata": {
                 "description": "Username for the Virtual Machine."
             }
         },
         "adminPassword": {
             "type": "securestring",
-            "defaultValue" : "",
+            "defaultValue" : "Cisco123",
             "metadata": {
                 "description": "Password for the Virtual Machine."
             }
@@ -93,7 +102,7 @@
         },
         "authenticationType": {
             "type": "string",
-            "defaultValue": "",
+            "defaultValue": "password",
             "allowedValues": [
                 "password",
                 "sshPublicKey"
@@ -104,13 +113,14 @@
         },
         "vmName": {
             "type": "string",
-            "defaultValue": "CSR",
+            "defaultValue": "CSR2",
             "metadata": {
                 "description": "Name for the Virtual Machine."
             }
         },
         "newStorageAccountName": {
             "type": "string",
+            "defaultValue": "CSR2Storage",
             "metadata": {
                 "description": "Unique Name for Storage Account where the Virtual Machine's disks will be placed."
             }
@@ -138,21 +148,21 @@
         },
         "storageAccountExistingRG": {
             "type": "string",
-            "defaultValue": "",
+            "defaultValue": "CSR2Storage",
             "metadata": {
                 "description": "Resource Group containing existing storage account"
             }
         },
         "publicIPAddressName": {
             "type": "string",
-            "defaultValue": "",
+            "defaultValue": "CSR2ip",
             "metadata": {
                 "description": "Name of the Public IP Address"
             }
         },
         "publicIPDnsName": {
             "type": "string",
-            "defaultValue": "csrdns",
+            "defaultValue": "csr2dns",
             "metadata": {
                 "description": "Unique DNS Prefix for the Public IP used to access the Virtual Machine."
             }
@@ -170,7 +180,7 @@
         },
         "publicIPExistingRGName": {
             "type": "string",
-            "defaultValue": "",
+            "defaultValue": "CSR2ip",
             "metadata": {
                 "description": "Resource Group containing existing public IP"
             }
@@ -375,7 +385,7 @@
                     "properties": {
                         "addressPrefix": "[parameters('Subnet1Prefix')]",
                         "nextHopType": "VirtualAppliance",
-                        "nextHopIpAddress": "[parameters('subnet1StartAddress')]"
+                        "nextHopIpAddress": "[parameters('subnet2StartAddress')]"
                     }
                 },
                 {
@@ -383,7 +393,7 @@
                   "properties": {
                       "addressPrefix": "0.0.0.0/0",
                       "nextHopType": "VirtualAppliance",
-                      "nextHopIpAddress": "[parameters('subnet1StartAddress')]"
+                      "nextHopIpAddress": "[parameters('subnet2StartAddress')]"
                   }
                 }
               ]
@@ -444,7 +454,8 @@
                     {
                         "name": "ipconfig1",
                         "properties": {
-                            "privateIPAllocationMethod": "Dynamic",
+                            "privateIPAllocationMethod": "Static",
+                            "privateIPAddress" : "[parameters('subnet1StartAddress')]",
                             "subnet": {
                                 "id": "[reference('Microsoft.Resources/deployments/SettingUpVirtualNetwork','2015-01-01').outputs.subnet1Ref.value]"
                             },
@@ -475,7 +486,7 @@
                         "name": "ipconfig1",
                         "properties": {
                             "privateIPAllocationMethod": "Static",
-                            "privateIPAddress" : "[parameters('subnet1StartAddress')]",
+                            "privateIPAddress" : "[parameters('subnet2StartAddress')]",
                             "subnet": {
                                 "id": "[reference('Microsoft.Resources/deployments/SettingUpVirtualNetwork','2015-01-01').outputs.subnet2Ref.value]"
                             }

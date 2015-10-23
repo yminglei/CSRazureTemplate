@@ -60,6 +60,9 @@
                         "name": "[parameters('Subnet2Name')]",
                         "properties": {
                             "addressPrefix": "[parameters('Subnet2Prefix')]",
+                            "routeTable": {
+                                "id": "[variables('routeTableId')]"
+                            }
                         }
                     }
                 ]
