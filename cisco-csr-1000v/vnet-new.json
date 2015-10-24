@@ -17,6 +17,9 @@
     "Subnet1Prefix": {
       "type": "string"
     },
+    "routeTableName1" : {
+      "type" : "string"
+    },
     "Subnet2Name": {
       "type": "string"
     },
@@ -35,6 +38,7 @@
     "vnetID" : "[resourceId('Microsoft.Network/virtualNetworks',parameters('virtualNetworkName'))]",
     "subnet1" : "[concat(variables('vnetID'),'/subnets/',parameters('Subnet1Name'))]",
     "subnet2" : "[concat(variables('vnetID'),'/subnets/',parameters('Subnet2Name'))]",
+    "routeTableId1" : "[resourceId('Microsoft.Network/routeTables',parameters('routeTableName1'))]",
     "routeTableId" : "[resourceId('Microsoft.Network/routeTables',parameters('routeTableName'))]"
   },
   "resources": [
@@ -53,7 +57,10 @@
                     {
                         "name": "[parameters('Subnet1Name')]",
                         "properties": {
-                            "addressPrefix": "[parameters('Subnet1Prefix')]"
+                            "addressPrefix": "[parameters('Subnet1Prefix')]",
+                            "routeTable1": {
+                                "id": "[variables('routeTableId1')]"
+                            }
                         }
                     },
                     {
