@@ -1,0 +1,197 @@
+{
+  "handler": "Microsoft.Compute.MultiVm",
+  "version": "0.0.1-preview",
+  "parameters": {
+    "basics": [
+      {
+        "name": "Name",
+        "type": "Microsoft.Common.TextBox",
+        "label": "Virtual Machine name",
+        "toolTip": "The name of the Virtual Machine.",
+        "constraints": {
+          "required": true
+        }
+      },
+      {
+        "name": "adminUsername",
+        "type": "Microsoft.Compute.UserNameTextBox",
+        "label": "Username",
+        "toolTip": "Admin username for the virtual machines. The OpsCenter username is 'admin'.",
+        "osPlatform": "Linux"
+      },
+      {
+          "name": "SSHCredentials",
+          "type": "Microsoft.Compute.CredentialsCombo",
+          "label": {
+              "authenticationType": "Authentication type",
+              "password": "Password",
+              "confirmPassword": "Confirm password",
+              "sshPublicKey": "SSH public key"
+          },
+          "toolTip": {
+              "authenticationType": "Authentication Type for the Linux Virtual Machine",
+              "password": "Password for the Virtual Machine",
+              "sshPublicKey": "SSH Public Key for the Virtual Machine"
+          },
+          "constraints": {
+              "required": true
+          },
+          "options": {
+              "hideConfirmation": false
+          },
+          "osPlatform": "Linux"
+      }
+    ],
+    "steps": [
+      {
+        "name": "ciscoASAvConfig",
+        "label": "Cisco ASAv settings",
+        "subLabel": {
+          "preValidation": "Configure the ASAv settings",
+          "postValidation": "Done"
+        },
+        "bladeTitle": "Cisco ASAv settings",
+        "elements": [
+          {
+            "name": "Size",
+            "type": "Microsoft.Compute.SizeSelector",
+            "label": "Virtual machine size",
+            "toolTip": "The size of virtual machine to provision.",
+            "recommendedSizes": [
+              "Standard_D3"
+            ],
+            "constraints": {
+              "allowedSizes": [
+                "Standard_D3"
+              ]
+            },
+            "osPlatform": "Linux",
+            "imageReference": {
+              "publisher": "cisco",
+              "offer": "cisco-asav",
+              "sku": "asav-azure-byol"
+            },
+            "count": "1"
+          },
+          {
+            "name": "storageAccount",
+            "type": "Microsoft.Storage.StorageAccountSelector",
+            "label": "Storage account",
+            "toolTip": "Storage Account for the Virtual Machine's Disks",
+            "defaultValue": {
+              "type": "Standard_LRS"
+            },
+            "constraints": {
+              "allowedTypes": [
+                "Standard_LRS"
+              ]
+            }
+          },
+          {
+            "name": "publicIpAddress",
+            "type": "Microsoft.Network.PublicIpAddressCombo",
+            "label": {
+              "publicIpAddress": "Public IP address",
+              "domainNameLabel": "DNS label"
+            },
+            "toolTip": {
+              "domainNameLabel": "DNS label for the Virtual Machine's public IP address."
+            },
+            "defaultValue": {
+              "publicIpAddressName": ""
+            },
+            "options": {
+              "hideNone": true
+            }
+          },
+          {
+            "name": "virtualNetwork",
+            "type": "Microsoft.Network.VirtualNetworkCombo",
+            "label": {
+                "virtualNetwork": "Virtual network",
+                "subnets": "Subnets"
+            },
+            "toolTip": {
+                "virtualNetwork": "Virtual Network Name",
+                "subnets": "Subnets requied for the Cisco ASAv solution"
+            },
+            "defaultValue": {
+                "name": "vnet01",
+                "addressPrefixSize": "/16"
+            },
+            "constraints": {
+                "minAddressPrefixSize": "/16"
+            },
+            "subnets": {
+                "subnet1": {
+                    "label": "First subnet",
+                    "constraints": {
+                        "minAddressPrefixSize": "/24",
+                        "minAddressCount": 12,
+                        "requireContiguousAddresses": false
+                    }
+                },
+                "subnet2": {
+                    "label": "Second subnet",
+                    "constraints": {
+                        "minAddressPrefixSize": "/24",
+                        "minAddressCount": 12,
+                        "requireContiguousAddresses": false
+                    }
+                },
+                "subnet3": {
+                    "label": "Third subnet",
+                    "constraints": {
+                        "minAddressPrefixSize": "/24",
+                        "minAddressCount": 12,
+                        "requireContiguousAddresses": false
+                    }
+                },
+                "subnet4": {
+                    "label": "Fourth subnet",
+                    "constraints": {
+                        "minAddressPrefixSize": "/24",
+                        "minAddressCount": 12,
+                        "requireContiguousAddresses": false
+                    }
+                }
+            }
+        }
+        ]
+      }
+    ],
+    "outputs": {
+      "vmName": "[basics('Name')]",
+      "adminUsername": "[basics('adminUsername')]",
+      "adminPassword": "[basics('SSHCredentials').password]",
+      "sshPublicKey": "[basics('SSHCredentials').sshPublicKey]",
+      "authenticationType" : "[basics('SSHCredentials').authenticationType]",
+      "vmSize": "[steps('ciscoASAvConfig').Size]",
+      "location": "[location()]",
+      "newStorageAccountName" : "[steps('ciscoASAvConfig').storageAccount.name]",
+      "storageAccountType" : "[steps('ciscoASAvConfig').storageAccount.type]",
+      "storageAccountNewOrExisting" : "[steps('ciscoASAvConfig').storageAccount.newOrExisting]",
+      "storageAccountExistingRG" : "[steps('ciscoASAvConfig').storageAccount.resourceGroup]",
+      "publicIPAddressName" : "[steps('ciscoASAvConfig').publicIpAddress.name]",
+      "publicIPDnsName" : "[steps('ciscoASAvConfig').publicIpAddress.domainNameLabel]",
+      "publicIPNewOrExisting" : "[steps('ciscoASAvConfig').publicIpAddress.newOrExistingOrNone]",
+      "publicIPExistingRGName" : "[steps('ciscoASAvConfig').publicIpAddress.resourceGroup]",
+      "virtualNetworkName" : "[steps('ciscoASAvConfig').virtualNetwork.name]",
+      "virtualNetworkAddressPrefix" : "[steps('ciscoASAvConfig').virtualNetwork.addressPrefix]",
+      "Subnet1Name" : "[steps('ciscoASAvConfig').virtualNetwork.subnets.subnet1.name]",
+      "Subnet1Prefix" : "[steps('ciscoASAvConfig').virtualNetwork.subnets.subnet1.addressPrefix]",
+      "Subnet2Name" : "[steps('ciscoASAvConfig').virtualNetwork.subnets.subnet2.name]",
+      "Subnet2Prefix" : "[steps('ciscoASAvConfig').virtualNetwork.subnets.subnet2.addressPrefix]",
+      "Subnet3Name" : "[steps('ciscoASAvConfig').virtualNetwork.subnets.subnet3.name]",
+      "Subnet3Prefix" : "[steps('ciscoASAvConfig').virtualNetwork.subnets.subnet3.addressPrefix]",
+      "Subnet4Name" : "[steps('ciscoASAvConfig').virtualNetwork.subnets.subnet4.name]",
+      "Subnet4Prefix" : "[steps('ciscoASAvConfig').virtualNetwork.subnets.subnet4.addressPrefix]",
+      "vnetNewOrExisting" : "[steps('ciscoASAvConfig').virtualNetwork.newOrExisting]",
+      "virtualNetworkExistingRGName" : "[steps('ciscoASAvConfig').virtualNetwork.resourceGroup]",
+      "subnet1StartAddress" : "[steps('ciscoASAvConfig').virtualNetwork.subnets.subnet1.startAddress]",
+      "subnet2StartAddress" : "[steps('ciscoASAvConfig').virtualNetwork.subnets.subnet2.startAddress]",
+      "subnet3StartAddress" : "[steps('ciscoASAvConfig').virtualNetwork.subnets.subnet3.startAddress]",
+      "subnet4StartAddress" : "[steps('ciscoASAvConfig').virtualNetwork.subnets.subnet4.startAddress]"
+    }
+  }
+}
